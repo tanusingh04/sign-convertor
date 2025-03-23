@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Language Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        #webcam {
+            width: 400px;
+            height: 300px;
+            border: 1px solid #ccc;
+        }
+        #output {
+            display: none; /* Hide the canvas for now */
+        }
+        #controls {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sign Language Detection</h1>
+    <video id="webcam" autoplay></video>
+    <canvas id="output"></canvas>
+    <div id="controls">
+        <p>Detected Text: <span id="detected-text">Waiting for detection...</span></p>
+        <select id="language-selector">
+            <option value="en-US">English</option>
+            <option value="gu-IN">Gujarati</option>
+        </select>
+        <button id="speak-btn">Speak</button>
+    </div>
+
+    <script>
+        // JavaScript code
+        const video = document.getElementById('webcam');
+        const canvas = document.getElementById('output');
+        const detectedTextElement = document.getElementById('detected-text');
+        const languageSelector = document.getElementById('language-selector');
+        const speakButton = document.getElementById('speak-btn');
+
+        // Placeholder text for demo
+        let detectedText = 'Hello, how are you?';
+
+        // Dummy sign language detection function (to be replaced by real detection)
+        function detectSignLanguage() {
+            // Simulated detection
+            detectedText = 'Hello';
+            detectedTextElement.innerText = detectedText;
+        }
+
+        // Function to convert text to speech
+        function speakText(text, language) {
+            const speechSynthesis = window.speechSynthesis;
+            const speech = new SpeechSynthesisUtterance(text);
+            speech.lang = language;
+            speechSynthesis.speak(speech);
+        }
+
+        // Start video stream
+        async function startVideo() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+            } catch (err) {
+                console.error('Error accessing webcam: ', err);
+            }
+        }
+
+        // Event listeners
+        speakButton.addEventListener('click', () => {
+            const language = languageSelector.value;
+            speakText(detectedText, language);
+        });
+
+        // Start webcam and run detection
+        startVideo();
+        setInterval(detectSignLanguage, 1000);
+    </script>
+</body>
+</html>
